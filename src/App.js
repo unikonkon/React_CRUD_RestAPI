@@ -2,11 +2,20 @@
 import './App.css';
 import React from 'react';
 import PageUser from './component/pageUser';
+import Create from './component/create';
+import {BrowserRouter,Route,Routes,} from "react-router-dom";
+
 function App() {
   return (
-    <div className="App">
-     <PageUser/>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={ <PageUser/>}/>
+        <Route path="/create" element={ <Create/>}/>
+      </Routes>
+   
+    </BrowserRouter>
+    
+   
   );
 }
 
