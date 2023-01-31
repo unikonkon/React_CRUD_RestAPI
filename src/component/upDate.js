@@ -1,4 +1,5 @@
-import  React, {useState} from 'react';
+import  React, {useState , useEffect} from 'react';
+import { useParams } from "react-router-dom";
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -9,21 +10,40 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
 
 
-export default function Create() {
+export default function UpDate() {
+    //ใช้ useParams ดึงค่า id มาจากหน้า
+    const { id } = useParams();
+    useEffect(() => {
+        //ดึงapi user ตาม id เเล้ว set ค่าที่แก้ไข้เข้าไป เพื่อให้หน้าโชว์ข้อมูลอัพเดต
+      fetch("https://www.melivecode.com/api/users/"+id)
+        .then(res => res.json())
+        .then(
+          (result) => {
+            setFname(result.user.fname)
+            setLname(result.user.lname)
+            setUsername(result.user.username)
+            setEmail(result.user.email)
+            setAvatar(result.user.avatar)
+          }
+        )
+        //[id] เปลี่ยนค่าทุกค่า ยกเว้น id 
+    }, [id])
+
   const handleSubmit = (event) => {
     event.preventDefault();
     var data = {
+    'id': id,
       'fname': fname,
       'lname': lname,
       'username': username,
       'email': email,
       'avatar': avatar,
     }
-  fetch('https://www.melivecode.com/api/users/create', {
-      method: 'POST',
+  fetch('https://www.melivecode.com/api/users/update', {
+      method: 'PUT',
       headers: {
         Accept: 'application/form-data',
         'Content-Type': 'application/json',
@@ -55,18 +75,21 @@ export default function Create() {
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 3,
+            marginTop: 8,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' , width: 130,height: 130,}}>
-            <GroupAddIcon sx={{ width: 90,height: 90,}}/>
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main',width: 130,height: 130, }}>
+            <BorderColorIcon sx={{ width: 90,height: 90,}}/>
           </Avatar>
           <Typography component="h1" variant="h5">
-            Create User
+          Edit Data
           </Typography>
+          <div className="pt-4 pb-2">
+            Data ID : {id}
+          </div>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
@@ -134,12 +157,12 @@ export default function Create() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Create
+              upDate
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="/" variant="body3">
-                  Already have an account? Create
+                  Back to Page Users List
                 </Link>
               </Grid>
             </Grid>
